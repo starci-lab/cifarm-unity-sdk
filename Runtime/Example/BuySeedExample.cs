@@ -10,7 +10,7 @@ public class BuySeedExample : MonoBehaviour
     private async void Start()
     {
         // Singleton pattern
-        IApiHttpClient apiHttpClient = ApiHttpClient.Instance;
+        IRestApiHttpClient apiHttpClient = RestApiHttpClient.Instance;
 
         // Configure the client (without tokens initially)
         apiHttpClient.ConfigureClient(BaseConfigs.BaseUrls.Rest, headers =>

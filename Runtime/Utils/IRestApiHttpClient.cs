@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace StarCi.CiFarmSDK.Utils
 {
-    public interface IApiHttpClient
+    public interface IRestApiHttpClient
     {
         /// <summary>
         /// Configure HttpClient with a base URL and default headers.

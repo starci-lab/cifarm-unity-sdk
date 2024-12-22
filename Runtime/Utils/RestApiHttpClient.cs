@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace StarCi.CiFarmSDK.Utils
 {
-    public class ApiHttpClient : IApiHttpClient
+    public class RestApiHttpClient : IRestApiHttpClient
     {
-        private static readonly Lazy<ApiHttpClient> _instance = new Lazy<ApiHttpClient>(() => new ApiHttpClient());
+        private static readonly Lazy<RestApiHttpClient> _instance = new Lazy<RestApiHttpClient>(() => new RestApiHttpClient());
 
         private readonly HttpClient _httpClient;
 
-        private ApiHttpClient()
+        private RestApiHttpClient()
         {
             _httpClient = new HttpClient
             {
@@ -21,7 +21,7 @@ namespace StarCi.CiFarmSDK.Utils
             };
         }
 
-        public static ApiHttpClient Instance => _instance.Value;
+        public static RestApiHttpClient Instance => _instance.Value;
 
         public void ConfigureClient(string baseUrl, Action<HttpRequestHeaders> configureHeaders)
         {

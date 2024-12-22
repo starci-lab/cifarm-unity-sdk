@@ -5,7 +5,7 @@ namespace StarCi.CiFarmSDK.Configs
         public static class BaseUrls
         {
             public readonly static string Rest = "https://api.cifarm.dev.starci.net";
-            public readonly static string Graphql = "https://graphql.cifarm.dev.starci.net";
+            public readonly static string Graphql = "http://localhost:3006";
         }
 
         public static class Endpoints

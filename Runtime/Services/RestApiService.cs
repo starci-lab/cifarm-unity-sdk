@@ -17,9 +17,9 @@ namespace StarCi.CiFarmSDK.Services
 {
     public class RestApiService
     {
-        private readonly IApiHttpClient _apiHttpClient;
+        private readonly IRestApiHttpClient _apiHttpClient;
 
-        public RestApiService(IApiHttpClient apiHttpClient)
+        public RestApiService(IRestApiHttpClient apiHttpClient)
         {
             _apiHttpClient = apiHttpClient;
         }
