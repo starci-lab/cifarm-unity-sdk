@@ -37,10 +37,10 @@ public class GraphqlGetToolsExample : MonoBehaviour
             string queryParams = $"query={encodedQuery}";
 
             // Execute GET request
-            var response = await apiHttpClient.GetAsync<object>(graphqlEndpoint, queryParams);
+            //var response = await apiHttpClient.GetAsync<object>(graphqlEndpoint, queryParams);
 
-            // Debug or process the response
-            Debug.Log($"GraphQL GET Response: {JsonConvert.SerializeObject(response, Formatting.Indented)}");
+            //// Debug or process the response
+            //Debug.Log($"GraphQL GET Response: {JsonConvert.SerializeObject(response, Formatting.Indented)}");
         }
         catch (Exception ex)
         {

@@ -1,4 +1,5 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Farming
+﻿using Newtonsoft.Json;
+namespace StarCi.CiFarmSDK.Types.Gameplay.Farming
 {
     public class CureAnimalRequest
     {
