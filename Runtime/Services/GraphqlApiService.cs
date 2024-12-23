@@ -1,18 +1,19 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
 
 namespace StarCi.CiFarmSDK.Services
 {
     public class GraphqlApiService : IGraphqlApiService
     {
-        public async string List1(string query = "")
+        public async Task<string> List1(string query = "")
         {
             if (string.IsNullOrEmpty(query))
             {
-
-            }   else
+                return "";
+            }
+            else
             {
                 return "";
-            } 
+            }
         }
     }
 }

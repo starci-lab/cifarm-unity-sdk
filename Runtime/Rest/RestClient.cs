@@ -1,64 +1,74 @@
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
 
-namespace StarCi.CiFarmSDK.Utils
-{   
+namespace StarCi.CiFarmSDK.Rest
+{
     //abstraction for native http instance
     public partial class RestClient
     {
         //native client
-        private HttpClient HttpClient { get; set; }
+        private HttpClient _httpClient { get; set; }
 
-        public RestClient()
+        public RestClient(string baseUrl)
         {
-            HttpClient = new HttpClient();
+            _httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(30)
+            };
+            _httpClient.BaseAddress = new Uri(baseUrl);
         }
-        
-        //public void ConfigureHeaders(Dictionary<string, string> headers)
-        //{
-        //    // Check if the provided dictionary is null or empty
-        //    if (headers != null)
-        //    {
-        //        foreach (var header in headers)
-        //        {
-        //            // Adding each header to the HttpClient's DefaultRequestHeaders
-        //            HttpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // Optional: Handle the case where headers are not provided
-        //        // You could log or throw an exception if this behavior is desired
-        //        System.Console.WriteLine("No headers provided.");
-        //    }
-        //}
+
+        /// <summary>
+        /// Configure HttpClient with a base URL and default headers.
+        /// </summary>
+        /// <param name="baseUrl">Base URL for HttpClient.</param>
+        /// <param name="configureHeaders">Action to configure headers.</param>
+        public void ConfigureHeaders(Action<HttpRequestHeaders> configureHeaders)
+        {
+            _httpClient.DefaultRequestHeaders.Clear();
+            configureHeaders?.Invoke(_httpClient.DefaultRequestHeaders);
+        }
 
         //whenever call the destroy method, the HttpClient despose
         public void Dispose()
         {
-            HttpClient.Dispose();
+            _httpClient.Dispose();
         }
 
-        //public void Post()
-        //{
-        //    try
-        //    {
-        //        var jsonData = JsonConvert.SerializeObject(data);
-        //        var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        /// <summary>
+        /// Send a POST request with JSON data to the specified endpoint.
+        /// </summary>
+        /// <typeparam name="TRequest">Request data type.</typeparam>
+        /// <typeparam name="TResponse">Response data type.</typeparam>
+        /// <param name="endpoint">API endpoint.</param>
+        /// <param name="data">Request data to send.</param>
+        /// <returns>Response deserialized into TResponse type.</returns>
+        public async Task<TResponse> PostAsync<TRequest, TResponse>(string endpoint, TRequest data)
+        {
+            try
+            {
+                Debug.Log($"[RestApiService] Calling {endpoint}...");
+                var jsonData = JsonConvert.SerializeObject(data);
+                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-        //        using var response = await _httpClient.PostAsync(endpoint, content);
-        //        response.EnsureSuccessStatusCode();
+                using var response = await _httpClient.PostAsync(endpoint, content);
+                response.EnsureSuccessStatusCode();
 
-        //        var responseBody = await response.Content.ReadAsStringAsync();
-        //        return JsonConvert.DeserializeObject<TResponse>(responseBody);
-        //    }
-        //    catch (HttpRequestException ex)
-        //    {
-        //        throw new Exception($"Error making POST request to {endpoint}: {ex.Message}", ex);
-        //    }
-        //}
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                Debug.Log($"[RestApiService] {endpoint} API call successful.");
+                return JsonConvert.DeserializeObject<TResponse>(responseBody);
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.LogError($"[RestApiService] Error calling {endpoint}: {ex.Message}");
+                throw default;
+            }
+        }
     }
 }

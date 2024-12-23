@@ -1,3 +1,4 @@
+using StarCi.CiFarmSDK.Rest;
 using StarCi.CiFarmSDK.Utils;
 using UnityEngine;
 
@@ -28,13 +29,19 @@ public class CiFarmSDK : SingletonPersistent<CiFarmSDK>
     private void Start()
     {
         //create client
-        RestClient = new ();
+        RestClient = new(restApiUrl);
+        RestClient.ConfigureHeaders(headers =>
+        {
+            headers.Add("Access-Control-Allow-Origin", "*");
+            headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        });
     }
 
     // Update is called once per frame
     private void Update()
     {
-        
+
     }
 
     private void OnDestroy()
