@@ -1,3 +1,4 @@
+using CiFarm.Rest.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -6,21 +7,21 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace StarCi.CiFarmSDK.Rest
+namespace CiFarm.Rest
 {
     //abstraction for native http instance
-    public partial class RestClient
+    public partial class RestClient : IDisposable, IRestClient
     {
         //native client
         private HttpClient _httpClient { get; set; }
 
         public RestClient(string baseUrl)
         {
-            _httpClient = new HttpClient
+            _httpClient = new()
             {
-                Timeout = TimeSpan.FromSeconds(30)
+                Timeout = TimeSpan.FromSeconds(30),
+                BaseAddress = new(baseUrl)
             };
-            _httpClient.BaseAddress = new Uri(baseUrl);
         }
 
         /// <summary>

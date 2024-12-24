@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StarCi.CiFarmSDK.Types.Base
+namespace CiFarm.Types.Base
 {
     public class Tool
     {

@@ -1,8 +1,8 @@
-﻿using StarCi.CiFarmSDK.Configs;
-using StarCi.CiFarmSDK.Types.Gameplay.Upgrade;
+﻿using CiFarm.Configs;
+using CiFarm.Types.Gameplay.Upgrade;
 using System.Threading.Tasks;
 
-namespace StarCi.CiFarmSDK.Rest
+namespace CiFarm.Rest
 {
     public partial class RestClient
     {

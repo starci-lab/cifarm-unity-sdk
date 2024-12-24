@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Community
+﻿namespace CiFarm.Types.Gameplay.Community
 {
     public class UnfollowRequest
     {

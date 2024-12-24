@@ -1,6 +1,4 @@
-using System.Net.Http;
-
-namespace StarCi.CiFarmSDK.Utils
+namespace CiFarm.Utils
 {
     public static class AuthUtils
     {

@@ -1,6 +1,6 @@
-﻿using StarCi.CiFarmSDK.Types.Base;
+﻿using CiFarm.Types.Base;
 
-namespace StarCi.CiFarmSDK.Types.Gameplay.Community
+namespace CiFarm.Types.Gameplay.Community
 {
     public class ThiefCropRequest : NeighborUserIdRequest
     {

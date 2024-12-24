@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Auth
+﻿namespace CiFarm.Types.Gameplay.Auth
 {
     public class TestSignatureRequest
     {

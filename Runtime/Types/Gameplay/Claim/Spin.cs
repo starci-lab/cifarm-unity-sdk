@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Claim
+﻿namespace CiFarm.Types.Gameplay.Claim
 {
     public class SpinRequest
     {

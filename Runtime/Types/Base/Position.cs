@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Base
+﻿namespace CiFarm.Types.Base
 {
     public class Position
     {

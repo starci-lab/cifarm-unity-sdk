@@ -1,6 +1,6 @@
-﻿using StarCi.CiFarmSDK.Types.Base;
+﻿using CiFarm.Types.Base;
 
-namespace StarCi.CiFarmSDK.Types.Gameplay.Placement
+namespace CiFarm.Types.Gameplay.Placement
 {
     public class MoveRequest
     {

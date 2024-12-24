@@ -1,4 +1,4 @@
-﻿using StarCi.CiFarmSDK.Types.Gameplay.Auth;
+﻿using CiFarm.Types.Gameplay.Auth;
 using UnityEngine;
 
 public class TestMessage : MonoBehaviour

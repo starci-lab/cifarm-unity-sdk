@@ -1,4 +1,4 @@
-namespace StarCi.CiFarmSDK.Configs
+namespace CiFarm.Configs
 {
     public static class BaseConfigs
     {

@@ -1,26 +1,26 @@
 {
-    "name": "net.starci.cifarm-unity-sdk",
-    "version": "1.1.0",
-    "displayName": "Ci Farm Unity SDK",
-    "description": "This is the .NET implementation of the CiFarm SDK for Unity.",
-    "unity": "2019.1",
-    "unityRelease": "0b5",
-    "documentationUrl": "https://docs.cifarm.starci.net/unity/",
-    "changelogUrl": "https://docs.cifarm.starci.net/changelog.html",
-    "licensesUrl": "https://docs.cifarm.starci.net/licensing.html",
-    "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.0.2"
-    },
-    "keywords": [
-        "Cifarm",
-        "CifarmSDK",
-        "Unity",
-        "Dotnet",
-        "CiFarm SDK"
-    ],
-    "author": {
-        "name": "CiFarm",
-        "email": "cifarm@gmail.com",
-        "url": "https://docs.cifarm.starci.net"
-    }
+  "name": "net.cifarm-unity-sdk",
+  "version": "1.2.0",
+  "displayName": "Ci Farm Unity SDK",
+  "description": "This is the .NET implementation of the CiFarm SDK for Unity.",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "https://docs.cifarm.starci.net/unity/",
+  "changelogUrl": "https://docs.cifarm.starci.net/changelog.html",
+  "licensesUrl": "https://docs.cifarm.starci.net/licensing.html",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "keywords": [
+    "Cifarm",
+    "CifarmSDK",
+    "Unity",
+    "Dotnet",
+    "CiFarm SDK"
+  ],
+  "author": {
+    "name": "CiFarm",
+    "email": "cifarm@gmail.com",
+    "url": "https://docs.cifarm.starci.net"
+  }
 }

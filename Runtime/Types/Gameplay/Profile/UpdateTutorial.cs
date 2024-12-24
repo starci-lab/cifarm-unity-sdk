@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Profile
+﻿namespace CiFarm.Types.Gameplay.Profile
 {
     public class UpdateTutorialRequest
     {

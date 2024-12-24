@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Delivery
+﻿namespace CiFarm.Types.Gameplay.Delivery
 {
     public class RetainProductRequest
     {

@@ -1,8 +1,8 @@
-﻿using StarCi.CiFarmSDK.Configs;
-using StarCi.CiFarmSDK.Types.Gameplay.Shop;
+﻿using CiFarm.Configs;
+using CiFarm.Types.Gameplay.Shop;
 using System.Threading.Tasks;
 
-namespace StarCi.CiFarmSDK.Rest
+namespace CiFarm.Rest
 {
     public partial class RestClient
     {

@@ -1,6 +1,6 @@
-﻿using StarCi.CiFarmSDK.Types.Base;
+﻿using CiFarm.Types.Base;
 
-namespace StarCi.CiFarmSDK.Types.Gameplay.Shop
+namespace CiFarm.Types.Gameplay.Shop
 {
     public class ConstructBuildingRequest
     {

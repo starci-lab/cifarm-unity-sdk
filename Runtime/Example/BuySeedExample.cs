@@ -1,5 +1,5 @@
-﻿using StarCi.CiFarmSDK.Types.Gameplay.Auth;
-using StarCi.CiFarmSDK.Types.Gameplay.Shop;
+﻿using CiFarm.Types.Gameplay.Auth;
+using CiFarm.Types.Gameplay.Shop;
 using UnityEngine;
 
 public class BuySeedExample : MonoBehaviour

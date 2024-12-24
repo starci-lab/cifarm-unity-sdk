@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Services
+﻿namespace CiFarm.Services
 {
     public class IGraphqlApiService
     {

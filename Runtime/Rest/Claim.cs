@@ -1,8 +1,8 @@
-using StarCi.CiFarmSDK.Configs;
-using StarCi.CiFarmSDK.Types.Gameplay.Claim;
+using CiFarm.Configs;
+using CiFarm.Types.Gameplay.Claim;
 using System.Threading.Tasks;
 
-namespace StarCi.CiFarmSDK.Rest
+namespace CiFarm.Rest
 {
     public partial class RestClient
     {

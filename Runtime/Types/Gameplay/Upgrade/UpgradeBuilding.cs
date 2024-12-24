@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Upgrade
+﻿namespace CiFarm.Types.Gameplay.Upgrade
 {
     public class UpgradeBuildingRequest
     {

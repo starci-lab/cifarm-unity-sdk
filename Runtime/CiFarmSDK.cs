@@ -1,5 +1,5 @@
-using StarCi.CiFarmSDK.Rest;
-using StarCi.CiFarmSDK.Utils;
+using CiFarm.Rest;
+using CiFarm.Utils;
 using UnityEngine;
 
 //[Icon("Runtime/Logo.png")]

@@ -1,6 +1,6 @@
-﻿using Packages.CustomPackage.Runtime.Types.Base;
+﻿using CiFarm.Types.Base;
 
-namespace StarCi.CiFarmSDK.Types.Args
+namespace CiFarm.Types.Args
 {
     public class GetToolsArgs : PaginatedArgs
     {

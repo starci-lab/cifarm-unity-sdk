@@ -1,4 +1,4 @@
-﻿namespace Packages.CustomPackage.Runtime.Types.Base
+﻿namespace CiFarm.Types.Base
 {
     public class PaginatedArgs
     {

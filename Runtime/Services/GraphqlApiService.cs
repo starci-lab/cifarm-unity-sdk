@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace StarCi.CiFarmSDK.Services
+namespace CiFarm.Services
 {
     public class GraphqlApiService : IGraphqlApiService
     {

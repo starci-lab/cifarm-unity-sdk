@@ -1,4 +1,4 @@
-﻿namespace StarCi.CiFarmSDK.Types.Gameplay.Placement
+﻿namespace CiFarm.Types.Gameplay.Placement
 {
     public class RecoverTileRequest
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StarCi.CiFarmSDK.Utils
+namespace CiFarm.Utils
 {
     public static class StringUtils
     {
