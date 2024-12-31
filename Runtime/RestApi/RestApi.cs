@@ -82,7 +82,10 @@ namespace CiFarmSDK.RestApi
         }
 
         // Send a GET request with error handling
-        private async UniTask<TResponse> Get<TResponse>(string endpoint, int currentRetryCount = 0)
+        private async UniTask<TResponse> GetAsync<TResponse>(
+            string endpoint,
+            int currentRetryCount = 0
+        )
         {
             // Construct the request URL
             _webRequest.url = $"{_baseUrl}/{_apiVersion.GetStringValue()}/{endpoint}";
@@ -105,7 +108,7 @@ namespace CiFarmSDK.RestApi
                 {
                     //wait for _retryInterval before retrying
                     await UniTask.Delay(_retryInterval);
-                    return await Get<TResponse>(endpoint, currentRetryCount + 1);
+                    return await GetAsync<TResponse>(endpoint, currentRetryCount + 1);
                 }
                 else
                 {
@@ -125,7 +128,7 @@ namespace CiFarmSDK.RestApi
         }
 
         // Send a POST request with error handling
-        public async UniTask<TResponse> Post<TRequest, TResponse>(
+        public async UniTask<TResponse> PostAsync<TRequest, TResponse>(
             string endpoint,
             TRequest requestBody,
             int currentRetryCount = 0
@@ -170,7 +173,7 @@ namespace CiFarmSDK.RestApi
                     }
                     //wait for _retryInterval before retrying
                     await UniTask.Delay(_retryInterval);
-                    return await Post<TRequest, TResponse>(
+                    return await PostAsync<TRequest, TResponse>(
                         endpoint,
                         requestBody,
                         currentRetryCount + 1

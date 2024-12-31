@@ -21,7 +21,10 @@ namespace CiFarmSDK.RestApi
         {
             var endpoint = GetEndpoint("verify-signature");
 
-            return await Post<VerifySignatureRequest, VerifySignatureResponse>(endpoint, request);
+            return await PostAsync<VerifySignatureRequest, VerifySignatureResponse>(
+                endpoint,
+                request
+            );
         }
     }
 }
