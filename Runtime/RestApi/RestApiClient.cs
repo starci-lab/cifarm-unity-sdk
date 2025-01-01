@@ -1,20 +1,22 @@
 #if CIFARM_SDK_UNITASK_SUPPORT
 
-using CiFarmSDK.Utils;
+using CiFarm.Utils;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using System.Net;
 using UnityEngine;
 using Unity.Plastic.Newtonsoft.Json;
+using System.Collections.Generic;
+using System;
 
-namespace CiFarmSDK.RestApi
+namespace CiFarm.RestApi
 {
-    public class RestApiException : System.Exception
+    public class RestApiClientException : Exception
     {
         public HttpStatusCode StatusCode { get; set; }
         public UnityWebRequest.Result Result { get; set; }
 
-        public RestApiException(
+        public RestApiClientException(
             string message,
             HttpStatusCode statusCode,
             UnityWebRequest.Result result
@@ -35,51 +37,28 @@ namespace CiFarmSDK.RestApi
         V2,
     }
 
-    public partial class RestApi : Builder<RestApi>
+    public partial class RestApiClient
     {
         // UnityWebRequest object
-        private UnityWebRequest _webRequest;
+        private readonly UnityWebRequest _webRequest;
 
         // Constructor initializes a new instance of UnityWebRequest
-        public RestApi()
+        public RestApiClient()
         {
             _webRequest = new UnityWebRequest();
         }
 
         // Set the base URL
-        private string _baseUrl;
+        public string BaseUrl { get; set; }
 
-        public RestApi SetBaseUrl(string baseUrl)
-        {
-            _baseUrl = baseUrl;
-            return this;
-        }
-
-        private int _retryCount = 3;
-
-        public RestApi SetRetryCount(int retryCount)
-        {
-            _retryCount = retryCount;
-            return this;
-        }
+        // Retry count
+        public int RetryCount { get; set; } = 2;
 
         // 2s for retry interval
-        private int _retryInterval = 2000;
+        public int RetryInterval { get; set; } = 2000;
 
-        public RestApi SetRetryInterval(int retryInterval)
-        {
-            _retryInterval = retryInterval;
-            return this;
-        }
-
-        // Api version
-        private RestApiVersion _apiVersion;
-
-        public RestApi SetApiVersion(RestApiVersion apiVersion)
-        {
-            _apiVersion = apiVersion;
-            return this;
-        }
+        // API version
+        public RestApiVersion ApiVersion { get; set; } = RestApiVersion.V1;
 
         // Send a GET request with error handling
         private async UniTask<TResponse> GetAsync<TResponse>(
@@ -88,7 +67,7 @@ namespace CiFarmSDK.RestApi
         )
         {
             // Construct the request URL
-            _webRequest.url = $"{_baseUrl}/{_apiVersion.GetStringValue()}/{endpoint}";
+            _webRequest.url = $"{BaseUrl}/{ApiVersion.GetStringValue()}/{endpoint}";
 
             // Set the request method to GET
             _webRequest.method = UnityWebRequest.kHttpVerbGET;
@@ -101,19 +80,19 @@ namespace CiFarmSDK.RestApi
             {
                 //check if currentRetryCount is less than _retryCount
                 if (
-                    currentRetryCount < _retryCount
+                    currentRetryCount < RetryCount
                     && _webRequest.responseCode != (int)HttpStatusCode.Unauthorized
                     && _webRequest.responseCode != (int)HttpStatusCode.Forbidden
                 )
                 {
                     //wait for _retryInterval before retrying
-                    await UniTask.Delay(_retryInterval);
+                    await UniTask.Delay(RetryCount);
                     return await GetAsync<TResponse>(endpoint, currentRetryCount + 1);
                 }
                 else
                 {
                     // Handle errors
-                    throw new RestApiException(
+                    throw new RestApiClientException(
                         _webRequest.error,
                         HttpStatusCode.BadRequest,
                         _webRequest.result
@@ -131,6 +110,7 @@ namespace CiFarmSDK.RestApi
         public async UniTask<TResponse> PostAsync<TRequest, TResponse>(
             string endpoint,
             TRequest requestBody,
+            Dictionary<string, string> additionalHeaders = null,
             int currentRetryCount = 0
         )
         {
@@ -138,7 +118,7 @@ namespace CiFarmSDK.RestApi
             string jsonBody = JsonConvert.SerializeObject(requestBody);
 
             // Construct the request URL
-            _webRequest.url = $"{_baseUrl}/{_apiVersion.GetStringValue()}/{endpoint}";
+            _webRequest.url = $"{BaseUrl}/{ApiVersion.GetStringValue()}/{endpoint}";
 
             // Set the request method to POST
             _webRequest.method = UnityWebRequest.kHttpVerbPOST;
@@ -148,6 +128,14 @@ namespace CiFarmSDK.RestApi
             _webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
             _webRequest.downloadHandler = new DownloadHandlerBuffer();
             _webRequest.SetRequestHeader("Content-Type", "application/json");
+            // Set additional headers if any
+            if (additionalHeaders != null)
+            {
+                foreach (var header in additionalHeaders)
+                {
+                    _webRequest.SetRequestHeader(header.Key, header.Value);
+                }
+            }
 
             // Send the request
             await _webRequest.SendWebRequest();
@@ -157,7 +145,7 @@ namespace CiFarmSDK.RestApi
             {
                 //check if currentRetryCount is less than _retryCount
                 if (
-                    currentRetryCount < _retryCount
+                    currentRetryCount < RetryCount
                     && _webRequest.responseCode != (int)HttpStatusCode.Unauthorized
                     && _webRequest.responseCode != (int)HttpStatusCode.Forbidden
                 )
@@ -165,24 +153,25 @@ namespace CiFarmSDK.RestApi
                     if (_webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
                     {
                         // Handle unauthorized errors (e.g., token expired)
-                        throw new RestApiException(
+                        throw new RestApiClientException(
                             _webRequest.error,
                             HttpStatusCode.Unauthorized,
                             _webRequest.result
                         );
                     }
                     //wait for _retryInterval before retrying
-                    await UniTask.Delay(_retryInterval);
+                    await UniTask.Delay(RetryInterval);
                     return await PostAsync<TRequest, TResponse>(
                         endpoint,
                         requestBody,
+                        additionalHeaders,
                         currentRetryCount + 1
                     );
                 }
                 else
                 {
                     // Handle network-related errors (e.g., no connection, server unreachable)
-                    throw new RestApiException(
+                    throw new RestApiClientException(
                         _webRequest.error,
                         HttpStatusCode.BadRequest,
                         _webRequest.result

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CiFarmSDK.Utils
+namespace CiFarm.Utils
 {
     public static class AuthToken
     {

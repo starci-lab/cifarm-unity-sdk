@@ -2,7 +2,7 @@ using System;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
-namespace CiFarmSDK.RestApi.Dtos
+namespace CiFarm.RestApi.Dtos.Auth
 {
     // Enum to represent SupportedChainKey (you would replace these values with actual ones from your context)
     public enum SupportedChainKey

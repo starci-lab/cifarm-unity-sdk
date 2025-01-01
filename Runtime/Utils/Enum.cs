@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace CiFarmSDK.Utils
+namespace CiFarm.Utils
 {
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
     sealed class EnumStringValueAttribute : Attribute

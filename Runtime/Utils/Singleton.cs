@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CiFarmSDK.Utils
+namespace CiFarm.Utils
 {
     public class Singleton<T> : MonoBehaviour
         where T : Component
