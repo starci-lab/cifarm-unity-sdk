@@ -1,0 +1,16 @@
+{
+    "name": "CiFarmSDK.Sample",
+    "rootNamespace": "",
+    "references": [
+        "GUID:cd9b144bf7e20d647b0acb29c7bf5a06"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

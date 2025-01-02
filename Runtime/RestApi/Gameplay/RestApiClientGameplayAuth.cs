@@ -1,6 +1,7 @@
+#if CIFARM_SDK_UNITASK_SUPPORT
+
 using System;
 using System.Net;
-using CiFarm.RestApi.Dtos.Auth; // Import DTOs related to the authentication endpoints.
 using CiFarm.Utils; // Utility functions that might be used across the API (like HTTP request helpers).
 using Cysharp.Threading.Tasks;
 
@@ -11,10 +12,6 @@ namespace CiFarm.RestApi
 
     public partial class RestApiClient
     {
-        // Base endpoint URL for the authentication services.
-        // This string will be used to build full API endpoints.
-        private readonly string _baseEndpoint = "auth";
-
         // Helper method to build the full endpoint URL by appending the specific endpoint to the base URL.
         // Example: GetEndpoint("verify-signature") would return "auth/verify-signature".
         private string GetEndpoint(string endpoint)
@@ -83,6 +80,8 @@ namespace CiFarm.RestApi
             string endpoint,
             TRequest requestBody
         )
+            where TRequest : class, new()
+            where TResponse : class, new()
         {
             var accessToken = AuthToken.GetAccessToken(); // Get the access token from the AuthToken class.
             if (string.IsNullOrEmpty(accessToken)) // Check if the access token is empty or null.
@@ -127,3 +126,5 @@ namespace CiFarm.RestApi
         }
     }
 }
+
+#endif

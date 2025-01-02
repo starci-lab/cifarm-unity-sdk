@@ -1,5 +1,8 @@
+using System.Collections;
+using CiFarm.Core.Credentials;
 using CiFarm.RestApi;
 using CiFarm.Utils;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace CiFarm
@@ -66,6 +69,80 @@ namespace CiFarm
             ConsoleLogger.LogSuccess("CiFarm SDK initialized");
         }
 
+        [Tooltip("Set the credentials for the user")]
+        [SerializeField]
+        private Credentials _credentials;
+
+        public void SetCredentials(Credentials credentials)
+        {
+            _credentials = credentials;
+        }
+
+        [Header("Editor")]
+        [SerializeField]
+        private SupportedChainKey _chainKey;
+
+        [SerializeField]
+        private Network _network;
+
+        [SerializeField]
+        private int _accountNumber;
+
+        public void Authenticate()
+        {
+            StartCoroutine(AuthenticateCoroutine());
+        }
+
+        private IEnumerator AuthenticateCoroutine()
+        {
+#if UNITY_EDITOR
+            AuthenticateAsync();
+#else
+            yield return new WaitUntil(() => _credentials != null);
+            AuthenticateAsync(false);
+#endif
+            yield return null;
+        }
+
+        private async void AuthenticateAsync(bool editor = true)
+        {
+            ConsoleLogger.LogDebug(editor.ToString());
+            if (editor)
+            {
+                var generateSignatureResponse = await _restApiClient.GenerateSignatureAsync(
+                    new()
+                    {
+                        ChainKey = _chainKey,
+                        Network = _network,
+                        AccountNumber = _accountNumber,
+                    }
+                );
+
+                // Set the credentials
+                _credentials.ChainKey = generateSignatureResponse.ChainKey;
+                _credentials.Message = generateSignatureResponse.Message;
+                _credentials.PublicKey = generateSignatureResponse.PublicKey;
+                _credentials.Signature = generateSignatureResponse.Signature;
+                _credentials.Network = generateSignatureResponse.Network;
+                _credentials.TelegramInitDataRaw = generateSignatureResponse.TelegramInitDataRaw;
+                _credentials.AccountAddress = generateSignatureResponse.AccountAddress;
+            }
+
+            var verifyMessageResponse = await _restApiClient.VerifyMessageAsync(
+                new()
+                {
+                    Message = _credentials.Message,
+                    PublicKey = _credentials.PublicKey,
+                    Signature = _credentials.Signature,
+                    ChainKey = _credentials.ChainKey,
+                    Network = _credentials.Network,
+                    AccountAddress = _credentials.AccountAddress,
+                }
+            );
+
+            // Save the authentication token
+            AuthToken.Save(verifyMessageResponse.AccessToken, verifyMessageResponse.RefreshToken);
+        }
 # else
         // Install the UniTask package to enable this feature
 #endif

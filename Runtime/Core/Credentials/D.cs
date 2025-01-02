@@ -1,46 +1,33 @@
 using System;
-using CiFarm.Core.Credentials;
-using Unity.Plastic.Newtonsoft.Json;
+using CiFarm.Utils;
 using UnityEngine;
 
-namespace CiFarm.RestApi
+namespace CiFarm.Core.Credentials
 {
-    [Serializable]
-    public class GenerateSignatureRequest
+    // Enum to represent SupportedChainKey (you would replace these values with actual ones from your context)
+    public enum SupportedChainKey
     {
-        [SerializeField]
-        private SupportedChainKey _chainKey;
+        [EnumStringValue("solana")]
+        Solana,
 
-        [SerializeField]
-        private Network _network;
+        [EnumStringValue("polkadot")]
+        Polkadot,
+        // Add other supported chains as necessary
+    }
 
-        [SerializeField]
-        private int _accountNumber;
+    // Enum to represent Network (you would replace these values with actual ones from your context)
+    public enum Network
+    {
+        [EnumStringValue("testnet")]
+        Testnet,
 
-        [JsonProperty("chainKey")]
-        public SupportedChainKey ChainKey
-        {
-            get => _chainKey;
-            set => _chainKey = value;
-        }
-
-        [JsonProperty("network")]
-        public Network Network
-        {
-            get => _network;
-            set => _network = value;
-        }
-
-        [JsonProperty("accountNumber")]
-        public int AccountNumber
-        {
-            get => _accountNumber;
-            set => _accountNumber = value;
-        }
+        [EnumStringValue("mainnet")]
+        Mainnet,
+        // Add other networks as necessary
     }
 
     [Serializable]
-    public class GenerateSignatureResponse
+    public class Credentials
     {
         [SerializeField]
         private SupportedChainKey _chainKey;
@@ -63,49 +50,42 @@ namespace CiFarm.RestApi
         [SerializeField]
         private string _accountAddress;
 
-        [JsonProperty("chainKey")]
         public SupportedChainKey ChainKey
         {
             get => _chainKey;
             set => _chainKey = value;
         }
 
-        [JsonProperty("message")]
         public string Message
         {
             get => _message;
             set => _message = value;
         }
 
-        [JsonProperty("publicKey")]
         public string PublicKey
         {
             get => _publicKey;
             set => _publicKey = value;
         }
 
-        [JsonProperty("signature")]
         public string Signature
         {
             get => _signature;
             set => _signature = value;
         }
 
-        [JsonProperty("network")]
         public Network Network
         {
             get => _network;
             set => _network = value;
         }
 
-        [JsonProperty("telegramInitDataRaw")]
         public string TelegramInitDataRaw
         {
             get => _telegramInitDataRaw;
             set => _telegramInitDataRaw = value;
         }
-
-        [JsonProperty("accountAddress")]
+    
         public string AccountAddress
         {
             get => _accountAddress;

@@ -2,7 +2,7 @@ using System;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
-namespace CiFarm.RestApi.Dtos.Auth
+namespace CiFarm.RestApi
 {
     [Serializable]
     public class RequestMessageRequest { }

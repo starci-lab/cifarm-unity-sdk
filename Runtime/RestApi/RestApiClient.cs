@@ -39,14 +39,8 @@ namespace CiFarm.RestApi
 
     public partial class RestApiClient
     {
-        // UnityWebRequest object
-        private readonly UnityWebRequest _webRequest;
-
         // Constructor initializes a new instance of UnityWebRequest
-        public RestApiClient()
-        {
-            _webRequest = new UnityWebRequest();
-        }
+        public RestApiClient() { }
 
         // Set the base URL
         public string BaseUrl { get; set; }
@@ -66,23 +60,25 @@ namespace CiFarm.RestApi
             int currentRetryCount = 0
         )
         {
-            // Construct the request URL
-            _webRequest.url = $"{BaseUrl}/{ApiVersion.GetStringValue()}/{endpoint}";
+            using var webRequest = new UnityWebRequest
+            {
+                // Construct the request URL
+                url = $"{BaseUrl}/{ApiVersion.GetStringValue()}/{endpoint}",
 
-            // Set the request method to GET
-            _webRequest.method = UnityWebRequest.kHttpVerbGET;
-
+                // Set the request method to GET
+                method = UnityWebRequest.kHttpVerbGET,
+            };
             // Send the request
-            await _webRequest.SendWebRequest();
+            await webRequest.SendWebRequest();
 
             // Check if the request was successful
-            if (_webRequest.result != UnityWebRequest.Result.Success)
+            if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 //check if currentRetryCount is less than _retryCount
                 if (
                     currentRetryCount < RetryCount
-                    && _webRequest.responseCode != (int)HttpStatusCode.Unauthorized
-                    && _webRequest.responseCode != (int)HttpStatusCode.Forbidden
+                    && webRequest.responseCode != (int)HttpStatusCode.Unauthorized
+                    && webRequest.responseCode != (int)HttpStatusCode.Forbidden
                 )
                 {
                     //wait for _retryInterval before retrying
@@ -93,15 +89,15 @@ namespace CiFarm.RestApi
                 {
                     // Handle errors
                     throw new RestApiClientException(
-                        _webRequest.error,
+                        webRequest.error,
                         HttpStatusCode.BadRequest,
-                        _webRequest.result
+                        webRequest.result
                     );
                 }
             }
 
             // Deserialize the response to TResponse type
-            string responseBody = _webRequest.downloadHandler.text;
+            string responseBody = webRequest.downloadHandler.text;
 
             return JsonConvert.DeserializeObject<TResponse>(responseBody);
         }
@@ -113,50 +109,59 @@ namespace CiFarm.RestApi
             Dictionary<string, string> additionalHeaders = null,
             int currentRetryCount = 0
         )
+            where TRequest : class, new()
+            where TResponse : class, new()
         {
-            // Serialize the request body to JSON
-            string jsonBody = JsonConvert.SerializeObject(requestBody);
+            // JSON serializer setting
+            using var webRequest = new UnityWebRequest();
+
+            ConsoleLogger.LogVerbose(JsonConvert.SerializeObject(requestBody));
+            var jsonBody = JsonConvert.SerializeObject(
+                requestBody,
+                new EnumAsStringConverter<TRequest>()
+            );
+            ConsoleLogger.LogDebug(jsonBody);
 
             // Construct the request URL
-            _webRequest.url = $"{BaseUrl}/{ApiVersion.GetStringValue()}/{endpoint}";
+            webRequest.url = $"{BaseUrl}/{ApiVersion.GetStringValue()}/{endpoint}";
 
             // Set the request method to POST
-            _webRequest.method = UnityWebRequest.kHttpVerbPOST;
+            webRequest.method = UnityWebRequest.kHttpVerbPOST;
 
             // Set the request body and content type (assuming you're sending JSON)
             var bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
-            _webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            _webRequest.downloadHandler = new DownloadHandlerBuffer();
-            _webRequest.SetRequestHeader("Content-Type", "application/json");
+            webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+            webRequest.SetRequestHeader("Content-Type", "application/json");
             // Set additional headers if any
             if (additionalHeaders != null)
             {
                 foreach (var header in additionalHeaders)
                 {
-                    _webRequest.SetRequestHeader(header.Key, header.Value);
+                    webRequest.SetRequestHeader(header.Key, header.Value);
                 }
             }
 
             // Send the request
-            await _webRequest.SendWebRequest();
+            await webRequest.SendWebRequest();
 
             // Check if the request was successful
-            if (_webRequest.result != UnityWebRequest.Result.Success)
+            if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 //check if currentRetryCount is less than _retryCount
                 if (
                     currentRetryCount < RetryCount
-                    && _webRequest.responseCode != (int)HttpStatusCode.Unauthorized
-                    && _webRequest.responseCode != (int)HttpStatusCode.Forbidden
+                    && webRequest.responseCode != (int)HttpStatusCode.Unauthorized
+                    && webRequest.responseCode != (int)HttpStatusCode.Forbidden
                 )
                 {
-                    if (_webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
+                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
                     {
                         // Handle unauthorized errors (e.g., token expired)
                         throw new RestApiClientException(
-                            _webRequest.error,
+                            webRequest.error,
                             HttpStatusCode.Unauthorized,
-                            _webRequest.result
+                            webRequest.result
                         );
                     }
                     //wait for _retryInterval before retrying
@@ -172,16 +177,19 @@ namespace CiFarm.RestApi
                 {
                     // Handle network-related errors (e.g., no connection, server unreachable)
                     throw new RestApiClientException(
-                        _webRequest.error,
+                        webRequest.error,
                         HttpStatusCode.BadRequest,
-                        _webRequest.result
+                        webRequest.result
                     );
                 }
             }
 
             // Deserialize the response to TResponse type
-            string responseBody = _webRequest.downloadHandler.text;
-            return JsonConvert.DeserializeObject<TResponse>(responseBody);
+            string responseBody = webRequest.downloadHandler.text;
+            return JsonConvert.DeserializeObject<TResponse>(
+                responseBody,
+                new EnumAsStringConverter<TResponse>()
+            );
         }
     }
 }

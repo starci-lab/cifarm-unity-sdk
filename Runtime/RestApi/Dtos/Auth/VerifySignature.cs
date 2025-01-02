@@ -1,25 +1,10 @@
 using System;
+using CiFarm.Core.Credentials;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
-namespace CiFarm.RestApi.Dtos.Auth
+namespace CiFarm.RestApi
 {
-    // Enum to represent SupportedChainKey (you would replace these values with actual ones from your context)
-    public enum SupportedChainKey
-    {
-        Solana,
-        Polkadot,
-        // Add other supported chains as necessary
-    }
-
-    // Enum to represent Network (you would replace these values with actual ones from your context)
-    public enum Network
-    {
-        Testnet,
-        Mainnet,
-        // Add other networks as necessary
-    }
-
     [Serializable]
     public class VerifySignatureRequest
     {
