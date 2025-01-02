@@ -1,6 +1,8 @@
+# if CIFARM_SDK_JSON_SUPPORT
+
 using System;
 using CiFarm.Core.Credentials;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace CiFarm.RestApi
@@ -102,3 +104,5 @@ namespace CiFarm.RestApi
         }
     }
 }
+
+#endif

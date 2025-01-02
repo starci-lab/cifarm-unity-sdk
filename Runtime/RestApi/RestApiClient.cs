@@ -1,11 +1,10 @@
-#if CIFARM_SDK_UNITASK_SUPPORT
+#if CIFARM_SDK_UNITASK_SUPPORT && CIFARM_SDK_JSON_SUPPORT
 
 using CiFarm.Utils;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
-using System.Net;
 using UnityEngine;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace CiFarm.RestApi
@@ -102,6 +101,7 @@ namespace CiFarm.RestApi
 
             var jsonBody = JsonConvert.SerializeObject(
                 requestBody,
+                Formatting.Indented,
                 new EnumAsStringConverter<TRequest>()
             );
 

@@ -2,7 +2,6 @@ using System.Collections;
 using CiFarm.Core.Credentials;
 using CiFarm.RestApi;
 using CiFarm.Utils;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace CiFarm

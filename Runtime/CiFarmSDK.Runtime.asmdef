@@ -16,6 +16,11 @@
             "name": "com.cysharp.unitask",
             "expression": "",
             "define": "CIFARM_SDK_UNITASK_SUPPORT"
+        },
+        {
+            "name": "com.unity.nuget.newtonsoft-json",
+            "expression": "",
+            "define": "CIFARM_SDK_JSON_SUPPORT"
         }
     ],
     "noEngineReferences": false

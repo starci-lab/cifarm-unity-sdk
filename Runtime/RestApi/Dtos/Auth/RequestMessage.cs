@@ -1,5 +1,7 @@
+#if CIFARM_SDK_JSON_SUPPORT
+
 using System;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace CiFarm.RestApi
@@ -21,3 +23,5 @@ namespace CiFarm.RestApi
         }
     }
 }
+
+#endif
