@@ -100,9 +100,9 @@ namespace CiFarm.RestApi
                     }
                 );
             }
-            catch (RestApiClientException ex)
+            catch (UnityWebRequestException ex)
             {
-                if (ex.StatusCode == HttpStatusCode.Unauthorized)
+                if (ex.ResponseCode == (long)HttpStatusCode.Unauthorized)
                 {
                     var refreshRequest = new RefreshRequest
                     {

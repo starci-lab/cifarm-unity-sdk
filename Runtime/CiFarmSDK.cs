@@ -62,8 +62,8 @@ namespace CiFarm
             {
                 BaseUrl = _restApiUrl,
                 ApiVersion = _restApiVersion,
-                RetryInterval = _retryCount,
-                RetryCount = _retryInterval,
+                RetryInterval = _retryInterval,
+                RetryCount = _retryCount,
             };
 
             ConsoleLogger.LogSuccess("CiFarm SDK initialized");
@@ -106,7 +106,6 @@ namespace CiFarm
 
         private async void AuthenticateAsync(bool editor = true)
         {
-            ConsoleLogger.LogDebug(editor.ToString());
             if (editor)
             {
                 var generateSignatureResponse = await _restApiClient.GenerateSignatureAsync(

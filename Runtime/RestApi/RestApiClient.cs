@@ -7,27 +7,9 @@ using System.Net;
 using UnityEngine;
 using Unity.Plastic.Newtonsoft.Json;
 using System.Collections.Generic;
-using System;
 
 namespace CiFarm.RestApi
 {
-    public class RestApiClientException : Exception
-    {
-        public HttpStatusCode StatusCode { get; set; }
-        public UnityWebRequest.Result Result { get; set; }
-
-        public RestApiClientException(
-            string message,
-            HttpStatusCode statusCode,
-            UnityWebRequest.Result result
-        )
-            : base(message)
-        {
-            StatusCode = statusCode;
-            Result = result;
-        }
-    }
-
     public enum RestApiVersion
     {
         [EnumStringValue("v1")]
@@ -60,6 +42,7 @@ namespace CiFarm.RestApi
             int currentRetryCount = 0
         )
         {
+            ConsoleLogger.LogDebug($"GET request to '{endpoint}'");
             using var webRequest = new UnityWebRequest
             {
                 // Construct the request URL
@@ -68,38 +51,39 @@ namespace CiFarm.RestApi
                 // Set the request method to GET
                 method = UnityWebRequest.kHttpVerbGET,
             };
-            // Send the request
-            await webRequest.SendWebRequest();
 
-            // Check if the request was successful
-            if (webRequest.result != UnityWebRequest.Result.Success)
+            try
             {
-                //check if currentRetryCount is less than _retryCount
+                // Send the request
+                await webRequest.SendWebRequest();
+
+                // Deserialize the response to TResponse type
+                string responseBody = webRequest.downloadHandler.text;
+
+                return JsonConvert.DeserializeObject<TResponse>(responseBody);
+            }
+            catch (UnityWebRequestException ex)
+            {
                 if (
-                    currentRetryCount < RetryCount
-                    && webRequest.responseCode != (int)HttpStatusCode.Unauthorized
-                    && webRequest.responseCode != (int)HttpStatusCode.Forbidden
+                    ex.Result == UnityWebRequest.Result.ConnectionError
+                    || ex.Result == UnityWebRequest.Result.ProtocolError
                 )
                 {
-                    //wait for _retryInterval before retrying
-                    await UniTask.Delay(RetryCount);
-                    return await GetAsync<TResponse>(endpoint, currentRetryCount + 1);
+                    if (currentRetryCount < RetryCount)
+                    {
+                        ConsoleLogger.LogDebug(
+                            $"Retrying GET request to '{endpoint}' due to {ex.Result}."
+                        );
+                        await UniTask.Delay(RetryInterval);
+                        return await GetAsync<TResponse>(endpoint, currentRetryCount + 1);
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-                else
-                {
-                    // Handle errors
-                    throw new RestApiClientException(
-                        webRequest.error,
-                        HttpStatusCode.BadRequest,
-                        webRequest.result
-                    );
-                }
+                throw;
             }
-
-            // Deserialize the response to TResponse type
-            string responseBody = webRequest.downloadHandler.text;
-
-            return JsonConvert.DeserializeObject<TResponse>(responseBody);
         }
 
         // Send a POST request with error handling
@@ -112,15 +96,14 @@ namespace CiFarm.RestApi
             where TRequest : class, new()
             where TResponse : class, new()
         {
+            ConsoleLogger.LogDebug($"POST request to '{endpoint}'");
             // JSON serializer setting
             using var webRequest = new UnityWebRequest();
 
-            ConsoleLogger.LogVerbose(JsonConvert.SerializeObject(requestBody));
             var jsonBody = JsonConvert.SerializeObject(
                 requestBody,
                 new EnumAsStringConverter<TRequest>()
             );
-            ConsoleLogger.LogDebug(jsonBody);
 
             // Construct the request URL
             webRequest.url = $"{BaseUrl}/{ApiVersion.GetStringValue()}/{endpoint}";
@@ -142,54 +125,51 @@ namespace CiFarm.RestApi
                 }
             }
 
-            // Send the request
-            await webRequest.SendWebRequest();
-
-            // Check if the request was successful
-            if (webRequest.result != UnityWebRequest.Result.Success)
+            try
             {
-                //check if currentRetryCount is less than _retryCount
+                // Send the request
+                await webRequest.SendWebRequest();
+
+                // Deserialize the response to TResponse type
+                string responseBody = webRequest.downloadHandler.text;
+                return JsonConvert.DeserializeObject<TResponse>(
+                    responseBody,
+                    new EnumAsStringConverter<TResponse>()
+                );
+            }
+            catch (UnityWebRequestException ex)
+            {
                 if (
-                    currentRetryCount < RetryCount
-                    && webRequest.responseCode != (int)HttpStatusCode.Unauthorized
-                    && webRequest.responseCode != (int)HttpStatusCode.Forbidden
+                    ex.Result == UnityWebRequest.Result.ConnectionError
+                    || ex.Result == UnityWebRequest.Result.ProtocolError
                 )
                 {
-                    if (webRequest.responseCode == (int)HttpStatusCode.Unauthorized)
+                    if (currentRetryCount < RetryCount)
                     {
-                        // Handle unauthorized errors (e.g., token expired)
-                        throw new RestApiClientException(
-                            webRequest.error,
-                            HttpStatusCode.Unauthorized,
-                            webRequest.result
+                        // Better retry message with more details
+                        ConsoleLogger.LogDebug(
+                            $"Retrying POST request to '{endpoint}' due to {ex.Result}."
+                        );
+
+                        // Wait for the retry interval before attempting again
+                        await UniTask.Delay(RetryInterval);
+
+                        // Recursively call PostAsync for retry
+                        return await PostAsync<TRequest, TResponse>(
+                            endpoint,
+                            requestBody,
+                            additionalHeaders,
+                            currentRetryCount + 1
                         );
                     }
-                    //wait for _retryInterval before retrying
-                    await UniTask.Delay(RetryInterval);
-                    return await PostAsync<TRequest, TResponse>(
-                        endpoint,
-                        requestBody,
-                        additionalHeaders,
-                        currentRetryCount + 1
-                    );
+                    else
+                    {
+                        // Throw after exceeding retry limit
+                        throw;
+                    }
                 }
-                else
-                {
-                    // Handle network-related errors (e.g., no connection, server unreachable)
-                    throw new RestApiClientException(
-                        webRequest.error,
-                        HttpStatusCode.BadRequest,
-                        webRequest.result
-                    );
-                }
+                throw;
             }
-
-            // Deserialize the response to TResponse type
-            string responseBody = webRequest.downloadHandler.text;
-            return JsonConvert.DeserializeObject<TResponse>(
-                responseBody,
-                new EnumAsStringConverter<TResponse>()
-            );
         }
     }
 }
