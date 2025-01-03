@@ -11,6 +11,7 @@ namespace CiFarm.GraphQL
     {
         // QueryAuthAsync method with retry mechanism
         public async UniTask<TResponse> QueryAuthAsync<TVariable, TResponse>(
+            string name,
             string query,
             TVariable variables = null
         )
@@ -26,6 +27,7 @@ namespace CiFarm.GraphQL
             try
             {
                 return await QueryAsync<TVariable, TResponse>( // Make a POST request with the provided request body and return the response.
+                    name, // The name of the query
                     query, // The endpoint URL
                     variables, // The request body
                     new Dictionary<string, string>() // Additional headers (in this case, the Authorization header with the access token)
@@ -47,6 +49,7 @@ namespace CiFarm.GraphQL
                     AuthToken.Save(refreshResponse.AccessToken, refreshRequest.RefreshToken); // Set the new access token in the AuthToken class.
 
                     return await QueryAsync<TVariable, TResponse>( // Make a POST request with the provided request body and return the response.
+                        name, // The name of the query
                         query, // The endpoint URL
                         variables, // The request body
                         new Dictionary<string, string>() // Additional headers (in this case, the Authorization header with the access token)
@@ -56,7 +59,7 @@ namespace CiFarm.GraphQL
                     );
                 }
                 throw; // Re-throw the exception if it's not an unauthorized error.
-            }
+            } 
         }
     }
 }

@@ -24,6 +24,7 @@ namespace CiFarm.GraphQL
 
         // GraphQL Query method with retry mechanism
         public async UniTask<TResponse> QueryAsync<TVariable, TResponse>(
+            string name,
             string query,
             TVariable variables = null,
             Dictionary<string, string> additionalHeaders = null,
@@ -66,11 +67,14 @@ namespace CiFarm.GraphQL
                 // Send the request and await its response
                 await webRequest.SendWebRequest().ToUniTask();
 
-                string responseBody = webRequest.downloadHandler.text;
-                return JsonConvert.DeserializeObject<TResponse>(
+                var responseBody = webRequest.downloadHandler.text;
+                var response = JsonConvert.DeserializeObject<GraphQLResponse<TResponse>>(
                     responseBody,
                     new EnumAsStringConverter<TResponse>()
                 );
+                Debug.Log($"GraphQL Query response: {JsonConvert.SerializeObject(response)}");
+                response.Name = name;
+                return response.GetData();
             }
             catch (UnityWebRequestException ex)
             {
@@ -86,6 +90,7 @@ namespace CiFarm.GraphQL
 
                     // Retry the request
                     return await QueryAsync<TVariable, TResponse>(
+                        name,
                         query,
                         variables,
                         additionalHeaders,

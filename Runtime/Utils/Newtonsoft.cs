@@ -30,8 +30,18 @@ namespace CiFarm.Utils
                 // Get the property name from JsonProperty attribute if it exists, otherwise use the property name
                 var propertyName = jsonProperty?.PropertyName ?? property.Name;
                 writer.WritePropertyName(propertyName);
-                // Check if the property is of enum type
-                if (property.PropertyType.IsEnum || property.PropertyType.IsNullableEnum())
+
+                // Check if the property is an object (not primitive or enum)
+                if (
+                    propertyValue != null
+                    && propertyValue.GetType().IsClass
+                    && propertyValue.GetType() != typeof(string)
+                )
+                {
+                    // Recursively serialize the nested object
+                    serializer.Serialize(writer, propertyValue);
+                }
+                else if (property.PropertyType.IsEnum || property.PropertyType.IsNullableEnum())
                 {
                     // If it's an enum, serialize its string representation (e.g., "Approved" instead of 1)
                     writer.WriteValue(propertyValue.GetStringValue());
@@ -55,13 +65,13 @@ namespace CiFarm.Utils
             JsonSerializer serializer
         )
         {
-            // Tạo đối tượng mục tiêu
+            // Create an instance of the target object
             var target = Activator.CreateInstance<T>();
 
-            // Tải JSON vào JObject để dễ dàng truy cập các thuộc tính theo tên
+            // Load the JSON into a JObject for easy property access by name
             var jObject = JObject.Load(reader);
 
-            // Lấy các thuộc tính của đối tượng
+            // Get the properties of the target object
             var properties = typeof(T).GetProperties();
 
             foreach (var property in properties)
@@ -74,17 +84,28 @@ namespace CiFarm.Utils
                 {
                     var value = jObject[propertyName];
 
+                    // Check if the property is an enum type
                     if (property.PropertyType.IsEnum)
                     {
+                        // If it's an enum, deserialize its value using the custom EnumExtension method
                         var enumValue = EnumExtensions.GetEnumValue(
                             property.PropertyType,
                             value.ToString()
                         );
                         property.SetValue(target, enumValue);
                     }
+                    // If the property is an object (class) and not a string, recurse and deserialize it
+                    else if (
+                        property.PropertyType.IsClass
+                        && property.PropertyType != typeof(string)
+                    )
+                    {
+                        var nestedValue = value.ToObject(property.PropertyType, serializer);
+                        property.SetValue(target, nestedValue);
+                    }
                     else
                     {
-                        // if not enum, set the value normally
+                        // If it's a simple type, deserialize normally
                         property.SetValue(target, value.ToObject(property.PropertyType));
                     }
                 }

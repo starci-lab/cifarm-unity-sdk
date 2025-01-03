@@ -2,7 +2,8 @@
     "name": "CiFarmSDK.Sample",
     "rootNamespace": "",
     "references": [
-        "GUID:cd9b144bf7e20d647b0acb29c7bf5a06"
+        "GUID:cd9b144bf7e20d647b0acb29c7bf5a06",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,5 +1,6 @@
 using System.Collections;
 using CiFarm.Core.Credentials;
+using CiFarm.GraphQL;
 using CiFarm.RestApi;
 using CiFarm.Utils;
 
@@ -26,12 +27,24 @@ namespace CiFarm
             { Environment.Production, "https://api.cifarm.starci.net" },
         };
 
+        [UnityEngine.Tooltip("Set the GraphQL API Urls for each environment")]
+        [UnityEngine.SerializeField]
+        private SerializableDictionary<Environment, string> _graphQLUrls = new()
+        {
+            { Environment.Local, "http://localhost:3006/graphql" },
+            { Environment.Development, "https://graphql.cifarm.dev.starci.net/graphql" },
+            { Environment.Staging, "https://graphql.cifarm.staging.starci.net/graphql" },
+            { Environment.Production, "https://graphql.cifarm.starci.net/graphql" },
+        };
+
         [UnityEngine.Tooltip("Set the environment for using CiFarm SDK")]
         [UnityEngine.SerializeField]
         private Environment _environment = Environment.Local;
 
         private string _restApiUrl;
-        private RestApiClient _restApiClient;
+        public RestApiClient RestApiClient { get; set; }
+
+        private string _graphQLUrl;
 
         [UnityEngine.Tooltip("Set the log scope, useful for debugging")]
         [UnityEngine.SerializeField]
@@ -49,6 +62,8 @@ namespace CiFarm
         [UnityEngine.SerializeField]
         private int _retryCount = 2;
 
+        public GraphQLClient GraphQLClient { get; set; }
+
         public void Start()
         {
             // Set the log scope
@@ -56,14 +71,21 @@ namespace CiFarm
 
             // Set the environment
             _restApiUrl = _restApiUrls[_environment];
-            _restApiClient = new RestApiClient()
+            RestApiClient = new RestApiClient()
             {
                 BaseUrl = _restApiUrl,
                 ApiVersion = _restApiVersion,
                 RetryInterval = _retryInterval,
                 RetryCount = _retryCount,
             };
-
+            _graphQLUrl = _graphQLUrls[_environment];
+            GraphQLClient = new GraphQLClient()
+            {
+                BaseUrl = _graphQLUrl,
+                RestApiClient = RestApiClient,
+                RetryCount = _retryCount,
+                RetryInterval = _retryInterval,
+            };
             ConsoleLogger.LogSuccess("CiFarm SDK initialized");
         }
 
@@ -106,7 +128,7 @@ namespace CiFarm
         {
             if (editor)
             {
-                var generateSignatureResponse = await _restApiClient.GenerateSignatureAsync(
+                var generateSignatureResponse = await RestApiClient.GenerateSignatureAsync(
                     new()
                     {
                         ChainKey = _chainKey,
@@ -125,7 +147,7 @@ namespace CiFarm
                 _credentials.AccountAddress = generateSignatureResponse.AccountAddress;
             }
 
-            var verifyMessageResponse = await _restApiClient.VerifyMessageAsync(
+            var verifyMessageResponse = await RestApiClient.VerifyMessageAsync(
                 new()
                 {
                     Message = _credentials.Message,
