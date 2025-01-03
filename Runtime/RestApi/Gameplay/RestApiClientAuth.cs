@@ -12,12 +12,7 @@ namespace CiFarm.RestApi
 
     public partial class RestApiClient
     {
-        // Helper method to build the full endpoint URL by appending the specific endpoint to the base URL.
-        // Example: GetEndpoint("verify-signature") would return "auth/verify-signature".
-        private string GetEndpoint(string endpoint)
-        {
-            return $"{_baseEndpoint}/{endpoint}";
-        }
+        
 
         // Asynchronous method to verify a signature by sending a POST request to the "verify-signature" endpoint.
         // This method will send the VerifySignatureRequest and return the VerifySignatureResponse.
