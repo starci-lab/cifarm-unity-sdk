@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CiFarm.RestApi
 {
-    public class RetainProductRequest : UserIdRequest
+    public class RetainProductRequest
     {
         [SerializeField]
         private string _deliveringProductId;

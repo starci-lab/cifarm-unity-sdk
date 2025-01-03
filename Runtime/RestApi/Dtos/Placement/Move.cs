@@ -29,6 +29,9 @@ namespace CiFarm.RestApi
             set => _position = value;
         }
     }
+
+    [Serializable]
+    public class MoveResponse { }
 }
 
 #endif

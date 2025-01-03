@@ -12,8 +12,6 @@ namespace CiFarm.RestApi
 
     public partial class RestApiClient
     {
-        
-
         // Asynchronous method to verify a signature by sending a POST request to the "verify-signature" endpoint.
         // This method will send the VerifySignatureRequest and return the VerifySignatureResponse.
         public async UniTask<VerifySignatureResponse> VerifyMessageAsync(
