@@ -3,7 +3,6 @@
 using CiFarm.Utils;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -41,7 +40,7 @@ namespace CiFarm.RestApi
             int currentRetryCount = 0
         )
         {
-            ConsoleLogger.LogDebug($"GET request to '{endpoint}'");
+            ConsoleLogger.LogDebug($"GET request to '{BaseUrl}/{endpoint}'");
             using var webRequest = new UnityWebRequest
             {
                 // Construct the request URL
@@ -54,7 +53,7 @@ namespace CiFarm.RestApi
             try
             {
                 // Send the request
-                await webRequest.SendWebRequest();
+                await webRequest.SendWebRequest().ToUniTask();
 
                 // Deserialize the response to TResponse type
                 string responseBody = webRequest.downloadHandler.text;
@@ -128,7 +127,7 @@ namespace CiFarm.RestApi
             try
             {
                 // Send the request
-                await webRequest.SendWebRequest();
+                await webRequest.SendWebRequest().ToUniTask();
 
                 // Deserialize the response to TResponse type
                 string responseBody = webRequest.downloadHandler.text;
