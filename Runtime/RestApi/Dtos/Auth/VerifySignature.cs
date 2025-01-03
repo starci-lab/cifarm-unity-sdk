@@ -3,7 +3,6 @@
 using System;
 using CiFarm.Core.Credentials;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace CiFarm.RestApi
 {
@@ -11,7 +10,7 @@ namespace CiFarm.RestApi
     public class VerifySignatureRequest
     {
         // Backing field for the Message property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _message;
 
         [JsonProperty("message")]
@@ -22,7 +21,7 @@ namespace CiFarm.RestApi
         }
 
         // Backing field for the PublicKey property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _publicKey;
 
         [JsonProperty("publicKey")]
@@ -33,7 +32,7 @@ namespace CiFarm.RestApi
         }
 
         // Backing field for the Signature property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _signature;
 
         [JsonProperty("signature")]
@@ -44,7 +43,7 @@ namespace CiFarm.RestApi
         }
 
         // Backing field for the ChainKey property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private SupportedChainKey? _chainKey;
 
         [JsonProperty("chainKey")]
@@ -55,7 +54,7 @@ namespace CiFarm.RestApi
         }
 
         // Backing field for the Network property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private Network? _network;
 
         [JsonProperty("network")]
@@ -66,7 +65,7 @@ namespace CiFarm.RestApi
         }
 
         // Backing field for the AccountAddress property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _accountAddress;
 
         [JsonProperty("accountAddress")]
@@ -82,7 +81,7 @@ namespace CiFarm.RestApi
     public class VerifySignatureResponse
     {
         // Backing field for the AccessToken property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _accessToken;
 
         [JsonProperty("accessToken")]
@@ -93,7 +92,7 @@ namespace CiFarm.RestApi
         }
 
         // Backing field for the RefreshToken property
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _refreshToken;
 
         [JsonProperty("refreshToken")]

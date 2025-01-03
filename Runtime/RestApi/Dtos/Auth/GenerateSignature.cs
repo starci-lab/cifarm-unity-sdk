@@ -3,20 +3,19 @@
 using System;
 using CiFarm.Core.Credentials;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace CiFarm.RestApi
 {
     [Serializable]
     public class GenerateSignatureRequest
     {
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private SupportedChainKey _chainKey;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private Network _network;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private int _accountNumber;
 
         [JsonProperty("chainKey")]
@@ -44,25 +43,25 @@ namespace CiFarm.RestApi
     [Serializable]
     public class GenerateSignatureResponse
     {
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private SupportedChainKey _chainKey;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _message;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _publicKey;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _signature;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private Network _network;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _telegramInitDataRaw;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private string _accountAddress;
 
         [JsonProperty("chainKey")]

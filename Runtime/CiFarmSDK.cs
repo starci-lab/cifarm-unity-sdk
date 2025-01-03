@@ -2,7 +2,6 @@ using System.Collections;
 using CiFarm.Core.Credentials;
 using CiFarm.RestApi;
 using CiFarm.Utils;
-using UnityEngine;
 
 namespace CiFarm
 {
@@ -17,8 +16,8 @@ namespace CiFarm
     public class CiFarmSDK : SingletonPersistent<CiFarmSDK>
     {
 # if CIFARM_SDK_UNITASK_SUPPORT
-        [Tooltip("Set the REST API URLs for each environment")]
-        [SerializeField]
+        [UnityEngine.Tooltip("Set the REST API URLs for each environment")]
+        [UnityEngine.SerializeField]
         private SerializableDictionary<Environment, string> _restApiUrls = new()
         {
             { Environment.Local, "http://localhost:3001" },
@@ -27,27 +26,27 @@ namespace CiFarm
             { Environment.Production, "https://api.cifarm.starci.net" },
         };
 
-        [Tooltip("Set the environment for using CiFarm SDK")]
-        [SerializeField]
+        [UnityEngine.Tooltip("Set the environment for using CiFarm SDK")]
+        [UnityEngine.SerializeField]
         private Environment _environment = Environment.Local;
 
         private string _restApiUrl;
         private RestApiClient _restApiClient;
 
-        [Tooltip("Set the log scope, useful for debugging")]
-        [SerializeField]
+        [UnityEngine.Tooltip("Set the log scope, useful for debugging")]
+        [UnityEngine.SerializeField]
         private LogScope _logScope = LogScope.All;
 
-        [Tooltip("Set the rest api version")]
-        [SerializeField]
+        [UnityEngine.Tooltip("Set the rest api version")]
+        [UnityEngine.SerializeField]
         private RestApiVersion _restApiVersion = RestApiVersion.V1;
 
-        [Tooltip("Set the retry interval")]
-        [SerializeField]
+        [UnityEngine.Tooltip("Set the retry interval")]
+        [UnityEngine.SerializeField]
         private int _retryInterval = 2000;
 
-        [Tooltip("Set the retry count")]
-        [SerializeField]
+        [UnityEngine.Tooltip("Set the retry count")]
+        [UnityEngine.SerializeField]
         private int _retryCount = 2;
 
         public void Start()
@@ -68,8 +67,8 @@ namespace CiFarm
             ConsoleLogger.LogSuccess("CiFarm SDK initialized");
         }
 
-        [Tooltip("Set the credentials for the user")]
-        [SerializeField]
+        [UnityEngine.Tooltip("Set the credentials for the user")]
+        [UnityEngine.SerializeField]
         private Credentials _credentials;
 
         public void SetCredentials(Credentials credentials)
@@ -77,14 +76,14 @@ namespace CiFarm
             _credentials = credentials;
         }
 
-        [Header("Editor")]
-        [SerializeField]
+        [UnityEngine.Header("Editor")]
+        [UnityEngine.SerializeField]
         private SupportedChainKey _chainKey;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private Network _network;
 
-        [SerializeField]
+        [UnityEngine.SerializeField]
         private int _accountNumber;
 
         public void Authenticate()
